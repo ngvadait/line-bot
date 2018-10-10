@@ -25,6 +25,6 @@ class RecieveTextService
     public function execute(TextMessage $event)
     {
         // エコーだけ
-        return $event->getText();
+        return 'Đừng nghịch chatbot nữa nhé! ahihi';
     }
 }
