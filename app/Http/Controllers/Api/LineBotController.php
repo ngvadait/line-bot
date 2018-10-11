@@ -24,7 +24,7 @@ class LineBotController extends Controller
         /** @var LINEBot\Event\BaseEvent $event */
         foreach ($events as $event) {
             $reply_token = $event->getReplyToken();
-            $reply_message = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
+            $reply_message = 'Not Support.[' . get_class($event) . '][' . $event->getType() . ']';
             switch (true){
                 case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
                     $service = new RecieveTextService($bot);
