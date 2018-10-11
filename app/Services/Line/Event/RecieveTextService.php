@@ -24,7 +24,13 @@ class RecieveTextService
      */
     public function execute(TextMessage $event)
     {
-        // エコーだけ
-        return 'Đừng nghịch chatbot nữa nhé! ahihi';
+        $text = $event->getText();
+        if ($text === 'hi') {
+            return 'What is your name?';
+        } else if ($text === 'hello') {
+            return 'How old are you?';
+        } else {
+            return 'What are you doing?';
+        }
     }
 }
