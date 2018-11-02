@@ -51,9 +51,10 @@ class LineBotController extends Controller
     public function testSendLine(Request $request)
     {
         $message = $request->message;
+        $test[] = $message;
         $userId = 'Uac668fc4e7f30ab3aa82b3c89a3a531f';
         /** @var LINEBot $bot */
         $bot = app('line-bot');
-        $bot->pushMessage($userId, $message);
+        $bot->pushMessage($userId, $test);
     }
 }
