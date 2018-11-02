@@ -19,4 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Api'], function () {
     Route::post('/line/callback', 'LineBotController@callback')->name('line.callback');
+    Route::get('/test/send', 'LineBotController@getForm');
+    Route::post('/test/send', 'LineBotController@testSendLine')->name('test.send.line');
 });

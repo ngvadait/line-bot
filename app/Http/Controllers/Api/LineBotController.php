@@ -39,7 +39,21 @@ class LineBotController extends Controller
                     $body = $event->getEventBody();
                     logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
             }
-            $bot->replyText($reply_token, $reply_message . 'user_id' . $userID);
+            $bot->replyText($reply_token, $reply_message . '.user_id - ' . $userID);
         }
+    }
+
+    public function getForm()
+    {
+        return view('form.line');
+    }
+
+    public function testSendLine(Request $request)
+    {
+        $message = $request->message;
+        $userId = 'Uac668fc4e7f30ab3aa82b3c89a3a531f';
+        /** @var LINEBot $bot */
+        $bot = app('line-bot');
+        $bot->pushMessage($userId, $message);
     }
 }
