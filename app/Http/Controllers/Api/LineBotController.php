@@ -25,11 +25,11 @@ class LineBotController extends Controller
         foreach ($events as $event) {
             $reply_token = $event->getReplyToken();
             $reply_message = 'Not Support.[' . get_class($event) . '][' . $event->getType() . ']';
-            $response = $bot->getProfile($event->getUserId());
-            if ($response->isSucceeded())
-            {
-                $profile = $response->getJSONDecodedBody();
-            }
+//            $response = $bot->getProfile($event->getUserId());
+//            if ($response->isSucceeded())
+//            {
+//                $profile = $response->getJSONDecodedBody();
+//            }
             $profile = $profile ?? 333;
             switch (true){
                 case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
