@@ -25,12 +25,7 @@ class LineBotController extends Controller
         foreach ($events as $event) {
             $reply_token = $event->getReplyToken();
             $reply_message = 'Not Support.[' . get_class($event) . '][' . $event->getType() . ']';
-//            $response = $bot->getProfile($event->getUserId());
-//            if ($response->isSucceeded())
-//            {
-//                $profile = $response->getJSONDecodedBody();
-//            }
-            $profile = $profile ?? 333;
+            $userID = $event->getUserId() ?? 333;
             switch (true){
                 case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
                     $service = new RecieveTextService($bot);
@@ -44,7 +39,7 @@ class LineBotController extends Controller
                     $body = $event->getEventBody();
                     logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
             }
-            $bot->replyText($reply_token, $reply_message . 'user_id' . $profile);
+            $bot->replyText($reply_token, $reply_message . 'user_id' . $userID);
         }
     }
 }
