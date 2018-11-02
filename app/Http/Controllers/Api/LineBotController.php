@@ -25,19 +25,25 @@ class LineBotController extends Controller
         foreach ($events as $event) {
             $reply_token = $event->getReplyToken();
             $reply_message = 'Not Support.[' . get_class($event) . '][' . $event->getType() . ']';
-            switch (true){
-                case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
-                    $service = new RecieveTextService($bot);
-                    $reply_message = $service->execute($event);
-                    break;
-                case $event instanceof LINEBot\Event\PostbackEvent:
-                    break;
-                case $event instanceof LINEBot\Event\UnfollowEvent:
-                    break;
-                default:
-                    $body = $event->getEventBody();
-                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+            $response = $bot->getProfile($event->getUserId());
+            if ($response->isSucceeded())
+            {
+                $profile = $response->getJSONDecodedBody();
             }
+            $reply_message = 'haha' . $profile;
+//            switch (true){
+//                case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
+//                    $service = new RecieveTextService($bot);
+//                    $reply_message = $service->execute($event) . $profile;
+//                    break;
+//                case $event instanceof LINEBot\Event\PostbackEvent:
+//                    break;
+//                case $event instanceof LINEBot\Event\UnfollowEvent:
+//                    break;
+//                default:
+//                    $body = $event->getEventBody();
+//                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+//            }
             $bot->replyText($reply_token, $reply_message);
         }
     }
