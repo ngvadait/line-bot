@@ -15,7 +15,7 @@ class LineBotController extends Controller
     {
         /** @var LINEBot $bot */
         $bot = app('line-bot');
-        $signature = $_SERVER['HTTP_'.LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
+        $signature = $_SERVER['HTTP_' . LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
         if (!LINEBot\SignatureValidator::validateSignature($request->getContent(), env('LINE_CHANNEL_SECRET'), $signature)) {
             logger()->info('recieved from difference line-server');
             abort(400);
@@ -26,7 +26,7 @@ class LineBotController extends Controller
             $reply_token = $event->getReplyToken();
             $reply_message = 'Not Support.[' . get_class($event) . '][' . $event->getType() . ']';
             $userID = $event->getUserId() ?? 333;
-            switch (true){
+            switch (true) {
                 case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
                     $service = new RecieveTextService($bot);
                     $reply_message = $service->execute($event);
@@ -37,7 +37,7 @@ class LineBotController extends Controller
                     break;
                 default:
                     $body = $event->getEventBody();
-                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+                    logger()->warning('Unknown event. [' . get_class($event) . ']', compact('body'));
             }
             $bot->replyText($reply_token, $reply_message . '.user_id - ' . $userID);
         }
@@ -51,7 +51,10 @@ class LineBotController extends Controller
     public function testSendLine(Request $request)
     {
         $message = $request->message;
-        $test[] = $message;
+        $test = [
+            'type' => 'text',
+            'text' => $message
+        ];
         $userId = 'Uac668fc4e7f30ab3aa82b3c89a3a531f';
         /** @var LINEBot $bot */
         $bot = app('line-bot');
