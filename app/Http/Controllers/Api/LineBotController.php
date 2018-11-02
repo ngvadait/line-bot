@@ -30,21 +30,21 @@ class LineBotController extends Controller
             {
                 $profile = $response->getJSONDecodedBody();
             }
-            $reply_message = 'haha' . $profile;
-//            switch (true){
-//                case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
-//                    $service = new RecieveTextService($bot);
-//                    $reply_message = $service->execute($event) . $profile;
-//                    break;
-//                case $event instanceof LINEBot\Event\PostbackEvent:
-//                    break;
-//                case $event instanceof LINEBot\Event\UnfollowEvent:
-//                    break;
-//                default:
-//                    $body = $event->getEventBody();
-//                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
-//            }
-            $bot->replyText($reply_token, $reply_message);
+            $profile = $profile ?? 333;
+            switch (true){
+                case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
+                    $service = new RecieveTextService($bot);
+                    $reply_message = $service->execute($event);
+                    break;
+                case $event instanceof LINEBot\Event\PostbackEvent:
+                    break;
+                case $event instanceof LINEBot\Event\UnfollowEvent:
+                    break;
+                default:
+                    $body = $event->getEventBody();
+                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+            }
+            $bot->replyText($reply_token, $reply_message . 'user_id' . $profile);
         }
     }
 }
