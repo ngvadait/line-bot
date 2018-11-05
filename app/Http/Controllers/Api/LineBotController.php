@@ -58,6 +58,9 @@ class LineBotController extends Controller
         $userId = env('LINE_USER_ID');
         /** @var LINEBot $bot */
         $bot = app('line-bot');
-        $bot->pushMessage($userId, $textMessage);
+//        $bot->pushMessage($userId, $textMessage);
+        // send batch
+        $bot->multicast([env('LINE_USER_ID_1'), env('LINE_USER_ID_2'), env('LINE_USER_ID_3')], $textMessage);
+
     }
 }
