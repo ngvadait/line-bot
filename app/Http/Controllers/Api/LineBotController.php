@@ -8,9 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Services\Line\Event\FollowService;
 use App\Services\Line\Event\RecieveTextService;
 use App\Services\Line\Event\RecieveLocationService;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 
 class LineBotController extends Controller
 {
+
+
     public function callback(Request $request)
     {
         /** @var LINEBot $bot */
@@ -39,7 +42,7 @@ class LineBotController extends Controller
                     $body = $event->getEventBody();
                     logger()->warning('Unknown event. [' . get_class($event) . ']', compact('body'));
             }
-            $bot->replyText($reply_token, $reply_message . '.user_id - ' . $userID);
+            $bot->replyText($reply_token, $reply_message . 'Id cua ban la - ' . $userID);
         }
     }
 
@@ -51,13 +54,10 @@ class LineBotController extends Controller
     public function testSendLine(Request $request)
     {
         $message = $request->message;
-        $test = [
-            'type' => 'text',
-            'text' => $message
-        ];
-        $userId = 'Uac668fc4e7f30ab3aa82b3c89a3a531f';
+        $textMessage = new TextMessageBuilder($message);
+        $userId = env('LINE_USER_ID');
         /** @var LINEBot $bot */
         $bot = app('line-bot');
-        $bot->pushMessage($userId, $test);
+        $bot->pushMessage($userId, $textMessage);
     }
 }
