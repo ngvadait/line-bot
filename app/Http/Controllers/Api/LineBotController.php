@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use LINE\LINEBot;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Line\Event\FollowService;
-use App\Services\Line\Event\RecieveTextService;
 use App\Services\Line\Event\RecieveLocationService;
-use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use App\Services\Line\Event\RecieveTextService;
+use Illuminate\Http\Request;
+use LINE\LINEBot;
 use LINE\LINEBot\MessageBuilder\ImageMessageBuilder;
-use LINE\LINEBot\MessageBuilder\VideoMessageBuilder;
 use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
-use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use LINE\LINEBot\MessageBuilder\VideoMessageBuilder;
+use LINE\LINEBot\RichMenuBuilder;
+use LINE\LINEBot\RichMenuBuilder\RichMenuAreaBoundsBuilder;
+use LINE\LINEBot\RichMenuBuilder\RichMenuAreaBuilder;
+use LINE\LINEBot\RichMenuBuilder\RichMenuSizeBuilder;
 use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder;
-use LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder;
-use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
-use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
-use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
+use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 
 class LineBotController extends Controller
 {
@@ -117,7 +121,7 @@ class LineBotController extends Controller
         $outputText = new TemplateMessageBuilder("this message to use the phone to look to the Oh", $button);
 
         /////////////////// Video
-        $url = 'https://scontent.fhan2-3.fna.fbcdn.net/v/t66.18014-6/10000000_255155445158077_8402596495820534722_n.mp4?_nc_cat=107&efg=eyJ2ZW5jb2RlX3RhZyI6Im9lcF9oZCJ9&_nc_ht=scontent.fhan2-3.fna&oh=b0c8dfb38a88dc80e9db56f87af21c42&oe=5C7A03AC';
+        $url = 'https://goo.gl/3Sbsyd';
         $image = 'https://cdn2.stylecraze.com/wp-content/uploads/2013/10/2.-Anushka-Sharma_1.jpg';
 
         $outputText = new VideoMessageBuilder($url, $image);
@@ -125,5 +129,53 @@ class LineBotController extends Controller
         $bot->pushMessage($userId, $outputText);
         // send batch
         // $bot->multicast([env('LINE_USER_ID_1'), env('LINE_USER_ID_2'), env('LINE_USER_ID_3')], $textMessage);
+    }
+
+    public function getFormRichMenu()
+    {
+        return view('form.richmenu');
+    }
+
+    public function testRichMenu(Request $request)
+    {
+        $bot = app('line-bot');
+        $size = $request->size;
+        $width = 1250;
+        $height= 843;
+        $richMenuSize = new RichMenuSizeBuilder($width, $height);
+
+        if ($size == 'full') {
+            $richMenuSize = $richMenuSize->getFull();
+            $boundsBuilder = new RichMenuAreaBoundsBuilder(0, 0, 2500, 1686);
+        } else {
+            $richMenuSize = $richMenuSize->getHalf();
+            $boundsBuilder = new RichMenuAreaBoundsBuilder(0, 0, 2500, 843);
+        }
+
+        if ($request->has('checked')) {
+            $checked = $request->checked;
+            if ($checked == 'yes') {
+                $selected = true;
+            }
+        } else {
+            $selected = false;
+        }
+
+        $name = $request->name;
+        $chatbar = $request->chatbar;
+
+        $actionBuilder = new PostbackTemplateActionBuilder('Buy', 'action=buy&itemid=123');
+
+        $areaBuilders = new RichMenuAreaBuilder($boundsBuilder, $actionBuilder);
+
+        $richMenu = new RichMenuBuilder($richMenuSize, $selected, $name, $chatbar, $areaBuilders);
+
+        $listIds = $bot->createRichMenu($richMenu);
+        $richMenuId = array_values($listIds->getJSONDecodedBody())[0];
+        $imagePath = public_path() . '/img/peppa.jpg';
+        $contentType = 'image/jpeg';
+
+        $updateRichMenu = $bot->uploadRichMenuImage($richMenuId, $imagePath, $contentType);
+
     }
 }

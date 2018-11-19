@@ -18,3 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/test/send', 'Api\LineBotController@getForm');
+Route::post('/test/send', 'Api\LineBotController@testSendLine')->name('test.send.line');
+Route::get('/test/create-rich-menu', 'Api\LineBotController@getFormRichMenu');
+Route::post('/test/create-rich-menu', 'Api\LineBotController@testRichMenu')->name('test.rich.menu');
