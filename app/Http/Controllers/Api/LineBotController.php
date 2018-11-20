@@ -172,10 +172,31 @@ class LineBotController extends Controller
 
         $listIds = $bot->createRichMenu($richMenu);
         $richMenuId = array_values($listIds->getJSONDecodedBody())[0];
+        echo $richMenuId;
         $imagePath = public_path() . '/img/peppa.jpg';
         $contentType = 'image/jpeg';
 
         $updateRichMenu = $bot->uploadRichMenuImage($richMenuId, $imagePath, $contentType);
 
+        /**
+         * Write new function LINEBot.php
+         */
+
+//        public function setDefaultRichMenu($richMenuId)
+//        {
+//            $url = $this->endpointBase . '/v2/bot/user/all/richmenu/' . urlencode($richMenuId);
+//            return $this->httpClient->post($url, []);
+//        }
+
+        /**
+         * Set default all user rich menus
+         *
+         * @param $richMenuId
+         * @return Response
+         */
+
+        $setDefaultRichMenu = $bot->setDefaultRichMenu($richMenuId);
+
+        dd($setDefaultRichMenu);
     }
 }
