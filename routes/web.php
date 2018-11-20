@@ -23,3 +23,5 @@ Route::get('/test/send', 'Api\LineBotController@getForm');
 Route::post('/test/send', 'Api\LineBotController@testSendLine')->name('test.send.line');
 Route::get('/test/create-rich-menu', 'Api\LineBotController@getFormRichMenu');
 Route::post('/test/create-rich-menu', 'Api\LineBotController@testRichMenu')->name('test.rich.menu');
+
+Route::get('/test/list-rich-menu', 'Api\LineBotController@getListRichMenu')->name('get.list.rich.menu');

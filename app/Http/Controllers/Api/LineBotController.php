@@ -199,4 +199,24 @@ class LineBotController extends Controller
 
         dd($setDefaultRichMenu);
     }
+
+    public function getListRichMenu()
+    {
+        $bot = app('line-bot');
+        $listRichMenus = $bot->getRichMenuList();
+        $listRichMenus = $listRichMenus->getJSONDecodedBody();
+
+        /**
+         * Delete rich menus
+         */
+        foreach ($listRichMenus as $listRichMenu) {
+            foreach ($listRichMenu as $richMenu) {
+                if ($richMenu) {
+                    $richMenuId = $richMenu['richMenuId'];
+                    $bot->deleteRichMenu($richMenuId);
+                }
+            }
+        }
+        dd('OK');
+    }
 }

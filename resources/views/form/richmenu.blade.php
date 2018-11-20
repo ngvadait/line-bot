@@ -33,5 +33,10 @@
     <input type="submit" value="Submit">
 </form>
 
+<br>
+<br>
+
+<a href="{{ route('get.list.rich.menu') }}">Get list richmenu</a>
+
 </body>
 </html>
