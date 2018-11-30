@@ -57,7 +57,7 @@ class LineBotController extends Controller
                     $body = $event->getEventBody();
                     logger()->warning('Unknown event. [' . get_class($event) . ']', compact('body'));
             }
-            $bot->replyText($reply_token, $reply_message . 'Id cua ban la - ' . $userID);
+            $bot->replyText($reply_token, 'Your ID: - ' . $userID);
         }
     }
 
